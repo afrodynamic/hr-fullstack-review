@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const { getReposByUsername} = require('../helpers/github.js');
-const { save } = require('../database/index.js');
+const { Repo, save } = require('../database/index.js');
 
 const app = express();
 app.use(bodyParser.json());
@@ -25,9 +25,19 @@ app.post('/repos', async(request, response)=> {
   response.status(201).send('Repos saved to database');
 });
 
-app.get('/repos', (request, response) => {
-  // TODO - your code here!
-  // This route should send back the top 25 repos
+app.get('/repos', async(request, response) => {
+  console.log('GET request received');
+
+  Repo.find({})
+    .sort({ stargazers_count: -1 })
+    .limit(25)
+    .then((repos) => {
+      response.status(200).json(repos);
+    })
+    .catch((error) => {
+      console.error(error);
+      response.status(500).send('Internal server error');
+    });
 });
 
 const port = 1128;
