@@ -14,14 +14,8 @@ const App = () => {
       url: '/repos',
       method: 'GET',
       success: (data) => {
-        const uniqueRepos = data.filter((repo) => {
-          return !repos.some((existingRepo) => {
-            return existingRepo.id === repo.id;
-          });
-        });
-
-        setRepos([...repos, ...uniqueRepos]);
-        setTopRepos(data);
+        setRepos(data);
+        setTopRepos(data.slice(0, 25));
       },
       error: (error) => {
         console.log('Error: ', error);
@@ -43,6 +37,7 @@ const App = () => {
         });
 
         setRepos([...repos, ...uniqueRepos]);
+        setTopRepos(repos.slice(0, 25));
       },
       error: (error) => {
         console.log('Error: ', error);

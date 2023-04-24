@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/fetcher');
+const uri = process.env.MONGODB_URI || 'mongodb://localhost/fetcher';
+mongoose.connect(uri);
 
 const ownerSchema = mongoose.Schema({
   login: String,

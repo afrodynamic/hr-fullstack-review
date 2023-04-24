@@ -1,5 +1,5 @@
 const axios = require('axios');
-const TOKEN = require('../config.js');
+const TOKEN = process.env.GITHUB_API_TOKEN || require('../config.js');
 
 const getReposByUsername = async(username) => {
   const github = axios.create({

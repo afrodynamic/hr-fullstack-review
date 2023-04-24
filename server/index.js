@@ -11,7 +11,6 @@ app.use(express.static(path.join(path.resolve(), 'client', 'dist')));
 
 app.post('/repos', async(request, response)=> {
   console.log('POST request received');
-  console.log(request.body);
 
   const username = request?.body?.username;
 
@@ -37,9 +36,17 @@ app.post('/repos', async(request, response)=> {
 app.get('/repos', async(request, response) => {
   console.log('GET request received');
 
-  Repo.find({})
+  const limit = request.query.top ? parseInt(request.query.top) : null;
+
+  let query = {};
+
+  if (limit) {
+    query = { ...query, $limit: limit };
+  }
+
+
+  Repo.find(query)
     .sort({ stargazers_count: -1 })
-    .limit(25)
     .then((repos) => {
       response.status(200).json(repos);
     })
@@ -49,8 +56,12 @@ app.get('/repos', async(request, response) => {
     });
 });
 
-const port = 1128;
+const port = process.env.PORT || 1128;
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
 });
+
+if (process.env.NOW_REGION) {
+  module.exports = app;
+}
