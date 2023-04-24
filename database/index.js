@@ -1,15 +1,18 @@
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/fetcher');
 
-let repoSchema = mongoose.Schema({
+const ownerSchema = mongoose.Schema({
+  login: String,
+  id: Number,
+  avatar_url: String,
+  url: String,
+  type: String
+});
+
+const repoSchema = mongoose.Schema({
+  id: {type: Number, required: true, unique: true},
   name: String,
-  owner: {
-    login: String,
-    id: Number,
-    avatar_url: String,
-    url: String,
-    type: String
-  },
+  owner: ownerSchema,
   html_url: String,
   description: String,
   fork: Boolean,

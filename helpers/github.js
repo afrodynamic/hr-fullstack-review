@@ -1,20 +1,39 @@
 const axios = require('axios');
-const config = require('../config.js');
+const TOKEN = require('../config.js');
 
-let getReposByUsername = (/* TODO */) => {
-  // TODO - Use the axios module to request repos for a specific
-  // user from the github API
-
-  // The options object has been provided to help you out, 
-  // but you'll have to fill in the URL
-  let options = {
-    url: 'FILL ME IN',
+const getReposByUsername = async(username) => {
+  const github = axios.create({
+    baseURL: 'https://api.github.com',
     headers: {
-      'User-Agent': 'request',
-      'Authorization': `token ${config.TOKEN}`
-    }
-  };
+      Authorization: `Bearer ${TOKEN}`,
+    },
+  });
 
-}
+  try {
+    const response = await github.get(`/users/${username}/repos`);
+
+    return response.data.map((repo) => ({
+      id: repo.id,
+      name: repo.name,
+      owner: {
+        login: repo.owner.login,
+        id: repo.owner.id,
+        avatar_url: repo.owner.avatar_url,
+        url: repo.owner.url,
+        type: repo.owner.type
+      },
+      html_url: repo.html_url,
+      description: repo.description,
+      fork: repo.fork,
+      forks_count: repo.forks_count,
+      stargazers_count: repo.stargazers_count,
+      watchers_count: repo.watchers_count,
+      open_issues_count: repo.open_issues_count
+    }));
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
 
 module.exports.getReposByUsername = getReposByUsername;

@@ -1,16 +1,27 @@
+import $ from 'jquery';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import $ from 'jquery';
-import Search from './components/Search.jsx';
+
 import RepoList from './components/RepoList.jsx';
+import Search from './components/Search.jsx';
 
 const App = () => {
 
   const [repos, setRepos] = useState([]);
 
   const search = (term) => {
-    console.log(`${term} was searched`);
-  }
+    $.ajax({
+      url: '/repos',
+      method: 'POST',
+      data: { username: term },
+      success: (data) => {
+        setRepos(data);
+      },
+      error: (error) => {
+        console.log('Error: ', error);
+      }
+    });
+  };
 
   return (
     <div>
@@ -19,6 +30,6 @@ const App = () => {
       <Search onSearch={search}/>
     </div>
   );
-}
+};
 
 ReactDOM.render(<App />, document.getElementById('app'));
