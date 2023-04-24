@@ -11,6 +11,7 @@ app.use(express.static(path.join(path.resolve(), 'client', 'dist')));
 
 app.post('/repos', async(request, response)=> {
   console.log('POST request received');
+  console.log(request.body);
 
   const username = request?.body?.username;
 
@@ -22,7 +23,15 @@ app.post('/repos', async(request, response)=> {
   const repos = await getReposByUsername(username);
   save(repos);
 
-  response.status(201).send('Repos saved to database');
+  Repo.find({})
+    .sort({ stargazers_count: -1 })
+    .then((repos) => {
+      response.status(201).json(repos);
+    })
+    .catch((error) => {
+      console.error(error);
+      response.status(500).send('Internal server error');
+    });
 });
 
 app.get('/repos', async(request, response) => {
