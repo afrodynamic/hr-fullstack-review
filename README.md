@@ -27,6 +27,18 @@ You will need the following dependencies to run this project:
 
 * `node` / `npm`, to manage project dependencies ([download](https://nodejs.org/en/download))
 * `git`, for cloning the project ([download](https://git-scm.com/downloads))
+* A GitHub account, for using the GitHub API ([sign up](https://github.com/signup))
+* A GitHub Personal Access Token, for using the GitHub API
+
+  * Login to your GitHub account and then create a new Token ([create token](https://github.com/settings/tokens/new?scopes=repo&description=GitHub%20Finder))
+  * Add the token to a `config.js` file at the root of the project or rename the `config.example.js` file to `config.js` and add your token there
+    * Include your token in the `config.js` file as such:
+
+      ```javascript
+      const TOKEN = 'ghp_YOUR_TOKEN_HERE';
+
+      module.exports = TOKEN;
+      ```
 
 ### Setup and Running
 
